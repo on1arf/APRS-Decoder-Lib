@@ -8,14 +8,13 @@ class APRSMessageType
 public:
 	enum Value : uint8_t
 	{
-		PositionWithoutTimestamp,	// = and !
-		PositionWithTimestamp,		// @ and /
-		Status,						// >
-		Query,						// ?
-		Message,					// :
-		Weather,					// _
-		Telemetry,					// T
-		CurrentMicEData,			// `
+		Position,			// =, !, @ and /
+		Status,				// >
+		Query,				// ?
+		Message,			// :
+		Weather,			// _
+		Telemetry,			// T
+		CurrentMicEData,	// `
 		// you can add more types ;)
 		Error,
 	};
@@ -28,11 +27,9 @@ public:
 		{
 		case '=':
 		case '!':
-			value = PositionWithoutTimestamp;
-			break;
 		case '@':
 		case '/':
-			value = PositionWithTimestamp;
+			value = Position;
 			break;
 		case '>':
 			value = Status;
@@ -66,10 +63,8 @@ public:
 	{
 		switch (value)
 		{
-		case PositionWithoutTimestamp:
-			return "Position Without Timestamp";
-		case PositionWithTimestamp:
-			return "Position With Timestamp";
+		case Position:
+			return "Position";
 		case Status:
 			return "Status";
 		case Query:
@@ -90,17 +85,5 @@ public:
 private:
 	Value value;
 };
-
-
-
-/*
-APRSMessageTypes getAPRSMessageType(const char type_char) const;
-String getAPRSMessageTypeName(const APRSMessageTypes type) const;
-
-enum class APRSPositionTypes
-{
-	WithMessage,	// = and @
-	NoMessage,		// ! and /
-};*/
 
 #endif

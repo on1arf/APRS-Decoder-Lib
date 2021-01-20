@@ -9,7 +9,7 @@ void base91_test1()
 	TEST_ASSERT_EQUAL_STRING("OE3MZC-9", msg.getSource().c_str());
 	TEST_ASSERT_EQUAL_STRING("WIDE1-1,WIDE2-2,qAR,OE3XFW-10", msg.getPath().c_str());
 	TEST_ASSERT_EQUAL_STRING("APMZC3", msg.getDestination().c_str());
-	TEST_ASSERT(msg.getType() == APRSMessageType::PositionWithoutTimestamp);
+	TEST_ASSERT(msg.getType() == APRSMessageType::Position);
 	TEST_ASSERT_EQUAL_STRING("!/6.j!RQ20>mTG/A=001301 14.0V 34C", msg.getBody()->getData().c_str());
 	// Latitude	48.1564739608218
 	// Longitude	15.9647228070544
@@ -29,7 +29,7 @@ void base91_test2()
 	TEST_ASSERT_EQUAL_STRING("OE3MZC-9", msg.getSource().c_str());
 	TEST_ASSERT_EQUAL_STRING("qAS,OE3XOC-11", msg.getPath().c_str());
 	TEST_ASSERT_EQUAL_STRING("APRS", msg.getDestination().c_str());
-	TEST_ASSERT(msg.getType() == APRSMessageType::PositionWithoutTimestamp);
+	TEST_ASSERT(msg.getType() == APRSMessageType::Position);
 	TEST_ASSERT_EQUAL_STRING("!/6,f?RPGM>G!QLoRa 18dBmW SNR=+10dB RSSI=-88db", msg.getBody()->getData().c_str());
 	// Latitude	48.2008290324105
 	// Longitude	15.9314302515449
