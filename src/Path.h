@@ -6,7 +6,6 @@
 #include <memory>
 
 namespace aprs {
-
 class IPathElement {
 public:
   virtual void   Consume()           = 0;
@@ -58,11 +57,6 @@ public:
 
 private:
   std::list<std::shared_ptr<IPathElement>> _path;
-};
-
-class PathFactory {
-public:
-  static Path generate(String pathText);
 };
 
 } // namespace aprs

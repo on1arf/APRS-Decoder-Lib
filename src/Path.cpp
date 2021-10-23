@@ -99,9 +99,4 @@ String Path::toString() const {
   p.remove(p.length() - 2);
   return p;
 }
-
-Path PathFactory::generate(String pathText) {
-  return Path();
-}
-
 } // namespace aprs
