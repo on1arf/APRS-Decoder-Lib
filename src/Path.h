@@ -3,7 +3,6 @@
 
 #include <Arduino.h>
 #include <list>
-#include <memory>
 
 namespace aprs {
 class IPathElement {
@@ -46,9 +45,9 @@ private:
 
 class Path {
 public:
-  std::list<std::shared_ptr<IPathElement>> get() const;
-  void                                     add(std::shared_ptr<IPathElement> path);
-  void                                     addNode(std::shared_ptr<IPathElement> node);
+  std::list<IPathElement *> get() const;
+  void                      add(IPathElement *path);
+  void                      addNode(IPathElement *node);
 
   bool isExisting(const String &name);
   void setConsumed(const String &name);
@@ -56,7 +55,7 @@ public:
   String toString() const;
 
 private:
-  std::list<std::shared_ptr<IPathElement>> _path;
+  std::list<IPathElement *> _path;
 };
 
 } // namespace aprs
