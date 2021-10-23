@@ -16,6 +16,7 @@ public:
 		Weather,					// _
 		Telemetry,					// T
 		CurrentMicEData,			// `
+		ThirdPartyTraffic,			// }
 		// you can add more types ;)
 		Error,
 	};
@@ -52,6 +53,9 @@ public:
 		case '`':
 			value = CurrentMicEData;
 			break;
+		case '}':
+			value = ThirdPartyTraffic;
+			break;
 		default:
 			value = Error;
 		}
@@ -82,6 +86,8 @@ public:
 			return "Telemetry";
 		case CurrentMicEData:
 			return "Current Mic-E Data";
+		case ThirdPartyTraffic:
+			return "Third Party Praffic";
 		default:
 			return "Error";
 		}

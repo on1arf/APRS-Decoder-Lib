@@ -47,6 +47,11 @@ public:
 	virtual String encode() const;
 	virtual String toString() const;
 
+	APRSMessage * getLowestMessage();
+
+	// "copy" constructor
+	APRSMessage(const APRSMessage&);
+
 private:
 	String _source;
 	String _destination;
@@ -54,6 +59,7 @@ private:
 	APRSMessageType _type;
 	String _rawBody;
 	APRSBody * const _body;
+	APRSMessage * _thirdParty;
 };
 
 

@@ -1,13 +1,13 @@
 #include "APRSMessage.h"
 
 APRSMessage::APRSMessage()
-	: _body(new APRSBody())
+	: _body(new APRSBody()), _thirdParty(nullptr)
 {
 }
 
 APRSMessage::APRSMessage(APRSMessage & other_msg)
 	: _source(other_msg.getSource()), _destination(other_msg.getDestination()), _path(other_msg.getPath()),
-	  _type(other_msg.getType()), _rawBody(other_msg.getRawBody()), _body(new APRSBody())
+	  _type(other_msg.getType()), _rawBody(other_msg.getRawBody()), _body(new APRSBody()), _thirdParty(other_msg._thirdParty)
 {
 	_body->setData(other_msg.getBody()->getData());
 }
@@ -29,6 +29,9 @@ APRSMessage & APRSMessage::operator=(APRSMessage & other_msg)
 APRSMessage::~APRSMessage()
 {
 	delete _body;
+
+	if (_thirdParty != nullptr) delete _thirdParty;
+
 }
 
 String APRSMessage::getSource() const
@@ -95,6 +98,15 @@ bool APRSMessage::decode(const String & message)
 	_rawBody = message.substring(pos_path+1);
 	_type = APRSMessageType(_rawBody[0]);
 	_body->decode(_rawBody);
+
+	// if the message is Third Party traffic, the body contains a APRS message by itself
+	if (_type == APRSMessageType::ThirdPartyTraffic) {
+		_thirdParty=new APRSMessage();
+		_thirdParty->decode(message.substring(pos_path+2)); // decode "body" part of message as a message by itself, excluding the starting '{'
+	} else {
+		_thirdParty=nullptr;
+	}
+
 	return bool(_type);
 }
 
@@ -114,6 +126,16 @@ String APRSMessage::toString() const
 {
 	return "Source: " + _source + ", Destination: " + _destination + ", Path: " + _path +
 		", Type: " + _type.toString() + ", " + _body->toString();
+}
+
+APRSMessage * APRSMessage::getLowestMessage()
+{
+	if (_thirdParty == nullptr) {
+		return this;
+	} else {
+		return _thirdParty->getLowestMessage();
+	}
+
 }
 
 
