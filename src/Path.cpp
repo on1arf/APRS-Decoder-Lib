@@ -10,65 +10,34 @@ public:
   explicit findPathElement(const String &name) : _name(name) {
   }
 
-  bool operator()(IPathElement *other) const {
-    return other->getName() == _name;
+  bool operator()(const PathElement &other) const {
+    return other.getName() == _name;
   }
 
 private:
   const String _name;
 };
 
-BasicPathElement::BasicPathElement(const String &name, bool consumed) : _name(name), _consumed(consumed) {
+PathElement::PathElement(const String &name, bool consumed) : _name(name), _consumed(consumed) {
 }
 
-void BasicPathElement::Consume() {
-  _consumed = true;
+void PathElement::setConsumed(bool consumed) {
+  _consumed = consumed;
 }
 
-bool BasicPathElement::getConsumed() const {
+bool PathElement::getConsumed() const {
   return _consumed;
 }
 
-String BasicPathElement::getName() const {
+String PathElement::getName() const {
   return _name;
 }
 
-String BasicPathElement::getPathName() const {
-  if (getConsumed()) {
-    return getName() + "*";
-  }
-  return getName();
-}
-
-WidePathElement::WidePathElement(const int startValue, const int currentValue) : _startValue(startValue), _currentValue(currentValue) {
-}
-
-void WidePathElement::Consume() {
-  if (_currentValue > 0) {
-    _currentValue--;
-  }
-}
-
-bool WidePathElement::getConsumed() const {
-  return _currentValue == 0;
-}
-
-String WidePathElement::getName() const {
-  return String("WIDE") + _startValue;
-}
-
-String WidePathElement::getPathName() const {
-  if (getConsumed()) {
-    return getName() + "*";
-  }
-  return getName() + "-" + _currentValue;
-}
-
-std::list<IPathElement *> Path::get() const {
+std::list<PathElement> Path::get() const {
   return _path;
 }
 
-void Path::add(IPathElement *path) {
+void Path::add(const PathElement &path) {
   _path.push_back(path);
 }
 
@@ -79,13 +48,19 @@ bool Path::isExisting(const String &name) {
 void Path::setConsumed(const String &name) {
   auto found = std::find_if(_path.begin(), _path.end(), findPathElement(name));
   if (found != _path.end()) {
-    (*found)->Consume();
+    found->setConsumed();
+    return;
   }
+  _path.push_back(PathElement(name, true));
 }
 
 String Path::toString() const {
-  auto accumulate_path = [](const String &a, aprs::IPathElement *elem) {
-    return a + elem->getPathName() + ", ";
+  auto accumulate_path = [](const String &a, const aprs::PathElement &elem) {
+    if (elem.getConsumed()) {
+      return a + elem.getName() + "*, ";
+    } else {
+      return a + elem.getName() + ", ";
+    }
   };
 
   String p = std::accumulate(_path.begin(), _path.end(), String(""), accumulate_path);
